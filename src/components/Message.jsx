@@ -1,15 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { ChatContext } from "../context/ChatContext";
 
-const Message = () => {
+const Message = ({ message }) => {
+
+    const { currentUser } = useContext(AuthContext)
+    const { data } = useContext(ChatContext)
+
     return (
-        <div className='message owner'>
+        <div className={`message ${message.senderId === currentUser.uid && "owner"}`}>
             <div className="messageInfo">
-                <img src="https://us-tuna-sounds-images.voicemod.net/f7afe41a-a81c-47af-9a1b-52e9b4422c14-1699941235855.png" alt="" />
+                <img src={message.senderId === currentUser.uid
+                    ? currentUser.photoURL
+                    : data.user.photoURL
+                }
+                    alt=""
+                />
                 <span>just now</span>
             </div>
             <div className="messageContent">
-                <p>hello</p>
-                <img src="https://us-tuna-sounds-images.voicemod.net/f7afe41a-a81c-47af-9a1b-52e9b4422c14-1699941235855.png" alt="" />
+                <p>{message.text}</p>
+                {message.img && <img src={message.img} alt="" />}
             </div>
         </div>
     )
