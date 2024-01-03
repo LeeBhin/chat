@@ -38,7 +38,7 @@ const Search = () => {
       const res = await getDoc(doc(db, "chats", combinedId))
 
       if (!res.exists()) {
-        await setDoc(doc(db, "chats", combinedId), { message: [] })
+        await setDoc(doc(db, "chats", combinedId), { messages: [] })
 
         await updateDoc(doc(db, "userChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {

@@ -23,7 +23,6 @@ const Chats = () => {
     currentUser.uid && getChats();
   }, [currentUser.uid])
 
-  console.log(chats)
   return (
     <div className="chats">
       {Object.entries(chats)?.map((chat) => (
