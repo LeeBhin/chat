@@ -50,9 +50,9 @@ const Input = () => {
                     }
                 }
 
-
+                
             );
-        }
+        } 
         if (text.trim() !== "") {
             await updateDoc(doc(db, "chats", data.chatId), {
                 messages: arrayUnion({
@@ -63,7 +63,7 @@ const Input = () => {
                     img: null,
                 }),
             });
-
+    
             setText("");
         }
         setText("");
