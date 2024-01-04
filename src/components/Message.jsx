@@ -12,6 +12,10 @@ const Message = ({ message }) => {
         ref.current?.scrollIntoView({ behavior: "smooth" });
     }, [message]);
 
+    if (!message.text && !message.img) {
+        return null;
+    }
+
     return (
         <div
             ref={ref}
@@ -29,7 +33,7 @@ const Message = ({ message }) => {
                 <span>방금 보냄</span>
             </div>
             <div className="messageContent">
-                <p>{message.text}</p>
+                {message.text && <p>{message.text}</p>}
                 {message.img && <img src={message.img} alt="" />}
             </div>
         </div>

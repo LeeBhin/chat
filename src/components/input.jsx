@@ -28,47 +28,44 @@ const Input = () => {
             const uploadTask = uploadBytesResumable(storageRef, img);
 
             uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                },
                 (error) => {
                 },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                async () => {
+                    try {
+                        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
                         await updateDoc(doc(db, "chats", data.chatId), {
                             messages: arrayUnion({
                                 id: uuid(),
-                                text,
+                                text: text.trim() !== "" ? text : null,
                                 senderId: currentUser.uid,
                                 date: Timestamp.now(),
                                 img: downloadURL,
                             }),
                         });
-                    });
+                    } catch (error) {
+                    }
                 }
+
+
             );
-        } else {
+        }
+        if (text.trim() !== "") {
             await updateDoc(doc(db, "chats", data.chatId), {
                 messages: arrayUnion({
                     id: uuid(),
                     text,
                     senderId: currentUser.uid,
                     date: Timestamp.now(),
+                    img: null,
                 }),
             });
+
+            setText("");
         }
-
-        await updateDoc(doc(db, "userChats", currentUser.uid), {
-            [data.chatId + ".lastMessage"]: {
-                text,
-            },
-            [data.chatId + ".date"]: serverTimestamp(),
-        });
-
-        await updateDoc(doc(db, "userChats", data.user.uid), {
-            [data.chatId + ".lastMessage"]: {
-                text,
-            },
-            [data.chatId + ".date"]: serverTimestamp(),
-        });
-
         setText("");
         setImg(null);
     };
