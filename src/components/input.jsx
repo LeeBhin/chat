@@ -3,30 +3,32 @@ import Img from "../img/img.png";
 import Attach from "../img/attach.png";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
+import {
+    arrayUnion,
+    doc,
+    serverTimestamp,
+    Timestamp,
+    updateDoc,
+} from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { v4 as uuid } from "uuid";
-import { updateDoc, doc, arrayUnion, Timestamp, serverTimestamp } from "firebase/firestore";
-import { uploadBytesResumable, getDownloadURL, ref } from "firebase/storage"
-
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 const Input = () => {
-    const [text, setText] = useState("")
-    const [img, setImg] = useState(null)
+    const [text, setText] = useState("");
+    const [img, setImg] = useState(null);
 
-    const { currentUser } = useContext(AuthContext)
-    const { data } = useContext(ChatContext)
+    const { currentUser } = useContext(AuthContext);
+    const { data } = useContext(ChatContext);
 
     const handleSend = async () => {
         if (img) {
-
             const storageRef = ref(storage, uuid());
 
             const uploadTask = uploadBytesResumable(storageRef, img);
 
             uploadTask.on(
-
                 (error) => {
-                    // setErr(true)
                 },
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
@@ -67,20 +69,33 @@ const Input = () => {
             [data.chatId + ".date"]: serverTimestamp(),
         });
 
-        setText("")
-        setImg(null)
-    }
+        setText("");
+        setImg(null);
+    };
+
+    const handleKeyPress = async (e) => {
+        if (e.key === "Enter" && text.trim() !== "") {
+            await handleSend();
+        }
+    };
 
     return (
         <div className="input">
-            <input type="text"
-                placeholder="Type somethig..."
-                onChange={e => setText(e.target.value)}
+            <input
+                type="text"
+                placeholder="채팅하기..."
+                onChange={(e) => setText(e.target.value)}
+                onKeyPress={handleKeyPress}
                 value={text}
             />
             <div className="send">
                 <img src={Attach} alt="" />
-                <input type="file" style={{ display: "none" }} id="file" onChange={e => setImg(e.target.files[0])} />
+                <input
+                    type="file"
+                    style={{ display: "none" }}
+                    id="file"
+                    onChange={(e) => setImg(e.target.files[0])}
+                />
                 <label htmlFor="file">
                     <img src={Img} alt="" />
                 </label>
@@ -91,4 +106,3 @@ const Input = () => {
 };
 
 export default Input;
-
