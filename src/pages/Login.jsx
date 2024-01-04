@@ -28,7 +28,7 @@ const Login = () => {
           <input type="email" placeholder="이메일" />
           <input type="password" placeholder="비밀번호" />
           <button>로그인</button>
-          {err && <span>뭔가 잘못됐어요..</span>}
+          {err && <span>다시 한 번 확인해주세요..</span>}
         </form>
         <p>계정이 없으신가요? <Link to="/register">회원가입</Link></p>
       </div>
