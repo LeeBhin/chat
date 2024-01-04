@@ -28,11 +28,9 @@ const Chats = () => {
     dispatch({ type: "CHANGE_USER", payload: u });
   };
 
-  console.log(chat[1].lastMessage?.text)
-
   return (
     <div className="chats">
-      {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => (
+      {Object.entries(chats)?.sort((a,b)=>b[1].date - a[1].date).map((chat) => (
         <div
           className="userChat"
           key={chat[0]}
